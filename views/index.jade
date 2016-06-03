@@ -3,6 +3,5 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  ul
-    each cat in cats
-      li #{cat.name} say #{cat.say}
+  each cat in cats
+    p #{cat.name} say Hello !
