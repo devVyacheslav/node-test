@@ -1,11 +1,11 @@
-var express = require('express');
-var router = express.Router();
-var mongoose = require('mongoose');
+let express = require('express');
+let router = express.Router();
+let mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
 
-var Cat = mongoose.model('Cat', { name: String });
+let Cat = mongoose.model('Cat', { name: String });
 
-var kitty = new Cat({ name: 'Zildjian' });
+let kitty = new Cat({ name: 'Zildjian' });
 
 kitty.save();
 
