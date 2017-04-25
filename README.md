@@ -1,4 +1,4 @@
-# Test App for Loftschool lession
+# Draft application for upgrading my skills
 
 Stack:
  - Nodejs
