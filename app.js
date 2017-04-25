@@ -1,40 +1,48 @@
-import express from 'express';
-import path from 'path';
-import favicon from 'serve-favicon';
-import logger from 'morgan';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import morgan from 'morgan';
-
-import config from './config'
-import session from 'express-session';
-
-
-
-
-import routes from  './routes/index';
-import users from './routes/users';
+import express from "express";
+import mongoose from "mongoose";
+import morgan from "morgan";
+import bodyParser from "body-parser";
+import bluebird from "bluebird";
+import config from "./config";
+import authRouter from "./routes/auth";
+import session from "express-session";
+import errorHandler from "./middlewares/errorHandler";
 
 const app = express();
 
-app.listen(config.port, err=> {
-  if(err) throw err;
-  console.log('server listening on port ${config.port} ')
+mongoose.Promise = bluebird;
+
+mongoose.connect(`mongodb://${config.db.host}:${config.db.port}/${config.db.name}`,
+    err => {
+        if (err) {
+            throw err
+        }
+
+        console.log('mongo connected');
+    }
+);
+
+app.listen(config.serverPort, err => {
+    if (err) throw err;
+    console.log(`server listening on port ${config.serverPort} `)
 });
 
 app.use(morgan('combined'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
-  resave:true,
-    saveUninitialized:true,
-    secret:config.secret
+    resave: true,
+    saveUninitialized: true,
+    secret: config.db.secret
 }));
 
-app.get('*', async (req, res)=> {
-  res.end('hello world');
-});
+// app.get('*', async(req, res) => {
+//     res.end('hello world');
+// });
+
+app.use('/api', authRouter);
+app.use(errorHandler);
 
 //
 // // view engine setup
