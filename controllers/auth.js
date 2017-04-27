@@ -1,4 +1,7 @@
+import jwt from "jsonwebtoken";
 import User from "./../models/user";
+
+import config from "./../config";
 
 export const signup = async(req, res, next) => {
     const credentials = req.body;
@@ -45,6 +48,8 @@ export const signin = async(req, res, next) => {
     }
 //    Если пароли совпадают то делаем сессию и возвращаем пользователя
 
-    req.session.userId = user._id;
-    res.json(user);
+    const token = jwt.sign({_id: user._id}, config.db.secret);
+    res.json(token);
+    // req.session.userId = user._id;
+    // res.json(user);
 };
